@@ -1,6 +1,6 @@
 var express = require('express');
 const CommetsController = require('../controllers/CommetsController');
-const verifyToken = require('../middleware/verifyToken');
+const verifyToken = require('../middleware/VerifyToken');
 var router = express.Router();
 
 /* GET users listing. */

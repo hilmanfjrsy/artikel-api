@@ -1,6 +1,6 @@
 var express = require('express');
 const ArticleController = require('../controllers/ArticleController');
-const verifyToken = require('../middleware/verifyToken');
+const verifyToken = require('../middleware/VerifyToken');
 var router = express.Router();
 
 /* GET users listing. */
