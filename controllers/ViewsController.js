@@ -5,13 +5,19 @@ class ViewsController {
     try {
       const body = req.body
 
+      let article = await db.articles.findOne({ where: { id: body.article_id } })
+      let users = await db.users.findOne({ where: { id: article.user_id } })
       for (let index = 0; index < body.total_data; index++) {
         let duration = Math.floor(Math.random() * 100) + 20;
-        let article = await db.articles.findOne({ where: { id: article_id } })
-        let user = await db.users.findOne({ order: db.sequelize.random() })
+        let user = await db.users.findOne({ order: db.sequelize.random(), where: { id: { [db.Sequelize.Op.ne]: article.user_id } } })
         let start = Date.parse(body.start_date);
         let end = Date.parse(body.end_date);
 
+        if (users.status_monetize) {
+          let incomePerSecond = 10
+          users.income = (duration * incomePerSecond) + parseFloat(users.income)
+          users.save()
+        }
         let createdAt = new Date(Math.floor(Math.random() * (end - start + 1) + start));
         await db.user_views.create({
           article_id: body.article_id,
