@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('articles', {
+  return sequelize.define('category', {
     id: {
       type: DataTypes.UUID,
       allowNull: false,
@@ -10,36 +10,16 @@ module.exports = function(sequelize, DataTypes) {
     title: {
       type: DataTypes.STRING(255),
       allowNull: true
-    },
-    user_id: {
-      type: DataTypes.UUID,
-      allowNull: true
-    },
-    img: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    is_publish: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true
-    },
-    contents: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    category_id: {
-      type: DataTypes.UUID,
-      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'articles',
+    tableName: 'category',
     schema: 'public',
     timestamps: true,
     paranoid: true,
     indexes: [
       {
-        name: "artikel_pkey",
+        name: "category_pkey",
         unique: true,
         fields: [
           { name: "id" },

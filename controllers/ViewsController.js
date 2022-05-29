@@ -36,29 +36,31 @@ class ViewsController {
 
       let data = null
 
-      if (id) {
-        let check = await db.user_views.findOne({ where: { id } })
-        let startDate = check.createdAt;
-        // Do your operations
-        let endDate = new Date();
-        let seconds = Math.floor((endDate.getTime() - startDate.getTime()) / 1000);
-        let artikel = await db.articles.findOne({ where: { id: article_id } })
-        let user = await db.users.findOne({ where: { id: artikel.user_id } })
-        
-        if (user.status_monetize) {
-          let incomePerSecond = 10
-          user.income = (seconds * incomePerSecond) + parseFloat(user.income)
-          user.save()
+      let artikel = await db.articles.findOne({ where: { id: article_id } })
+      if (artikel.user_id === user_id) {
+        if (id) {
+          let check = await db.user_views.findOne({ where: { id } })
+          let startDate = check.createdAt;
+          // Do your operations
+          let endDate = new Date();
+          let seconds = Math.floor((endDate.getTime() - startDate.getTime()) / 1000);
+          let user = await db.users.findOne({ where: { id: artikel.user_id } })
+
+          if (user.status_monetize) {
+            let incomePerSecond = 10
+            user.income = (seconds * incomePerSecond) + parseFloat(user.income)
+            user.save()
+          }
+          check.duration = seconds
+          check.save()
+          // data = check
+        } else {
+          data = await db.user_views.create({
+            article_id,
+            user_id,
+            duration: 0
+          })
         }
-        check.duration = seconds
-        check.save()
-        // data = check
-      } else {
-        data = await db.user_views.create({
-          article_id,
-          user_id,
-          duration: 0
-        })
       }
       let message = "Berhasil"
       return res.status(200).send({ message, data })

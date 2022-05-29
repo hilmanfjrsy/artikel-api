@@ -9,6 +9,7 @@ class HomeContoller {
         attributes: {
           include: [
             [db.sequelize.literal(`(select count(*) from user_views where article_id="articles".id )`), 'total_views'],
+            [db.sequelize.literal(`(select title from category where id="articles".category_id )`), 'category_name'],
           ],
           exclude: ['contents'],
         },
@@ -58,14 +59,20 @@ class HomeContoller {
           [db.Sequelize.Op.iLike]: `%${req.query.search}%`
         }
       }
+      if (req.query.category_id) {
+        where.category_id = req.query.category_id
+      }
       let find = {
         attributes: {
           include: [
             [db.sequelize.literal(`(select count(*) from user_views where article_id="articles".id )`), 'total_views'],
+            [db.sequelize.literal(`(select title from category where id="articles".category_id )`), 'category_name'],
           ],
           exclude: ['contents'],
         },
         where,
+        limit: 10,
+        offset: 10 * (req.query.page - 1),
         include: [{
           model: db.users,
           attributes: ['id', 'name', 'avatar_id'],
@@ -103,6 +110,7 @@ class HomeContoller {
         attributes: {
           include: [
             [db.sequelize.literal(`(select count(*) from user_views where article_id="articles".id )`), 'total_views'],
+            [db.sequelize.literal(`(select title from category where id="articles".category_id )`), 'category_name'],
           ],
         },
         where,
@@ -157,6 +165,7 @@ class HomeContoller {
           include: [
             [db.sequelize.literal(`(select count(*) from user_views where article_id="articles".id )`), 'total_views'],
             [db.sequelize.literal(`(select count(*) from comments where article_id="articles".id )`), 'total_comment'],
+            [db.sequelize.literal(`(select title from category where id="articles".category_id )`), 'category_name'],
           ],
         },
         where,
@@ -179,6 +188,19 @@ class HomeContoller {
       return res.status(200).send({
         message,
         articles
+      })
+    } catch (error) {
+      return res.send(error)
+    }
+  }
+
+  getAllCategory = async (req, res, next) => {
+    try {
+      let category = await db.category.findAll({ where: { deletedAt: null } })
+      let message = "Berhasil"
+      return res.status(200).send({
+        message,
+        category
       })
     } catch (error) {
       return res.send(error)

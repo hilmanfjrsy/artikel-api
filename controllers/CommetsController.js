@@ -22,7 +22,7 @@ class CommetsController {
       if (article_id) {
         data = await db.sequelize.query(`SELECT cm.id,cm.article_id,cm.comment, a.avatar,cm."createdAt",
                 CASE
-                  WHEN (u.id = '${user_id}') THEN 'Anda'
+                  WHEN (u.id::text = '${user_id}') THEN 'Anda'
                   ELSE u.name
                 END AS "name" from comments cm 
                 JOIN users u on u.id=cm.user_id and cm."deletedAt" is null and u."deletedAt" is null

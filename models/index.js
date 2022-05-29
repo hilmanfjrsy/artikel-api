@@ -8,6 +8,7 @@ var avatar = require('./avatar')(sequelize, DataType)
 var user_views = require('./user_views')(sequelize, DataType)
 var articles = require('./articles')(sequelize, DataType)
 var comments = require('./comments')(sequelize, DataType)
+var category = require('./category')(sequelize, DataType)
 
 articles.belongsTo(users, { foreignKey: 'user_id' })
 users.belongsTo(avatar, { foreignKey: 'avatar_id' })
@@ -19,6 +20,7 @@ var db = {
     avatar,
     user_views,
     articles,
-    comments
+    comments,
+    category
 }
 module.exports = db
